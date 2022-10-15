@@ -12,6 +12,8 @@
         "vite": "^3.0.0"
     },
     "dependencies": {
-        "@tailwindcss/line-clamp": "^0.4.2"
+        "@tailwindcss/line-clamp": "^0.4.2",
+        "autoprefixer": "^10.4.12",
+        "sass": "^1.55.0"
     }
 }
