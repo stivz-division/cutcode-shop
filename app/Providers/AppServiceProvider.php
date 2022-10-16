@@ -36,7 +36,6 @@ class AppServiceProvider extends ServiceProvider
                 ->debug('whenQueryingForLongerThan: ' . $connection->query()->toSql());
         });
 
-        // TODO 3rd lesson request cycle
         $kernel = app(Kernel::class);
         $kernel->whenRequestLifecycleIsLongerThan(
             CarbonInterval::second(4),

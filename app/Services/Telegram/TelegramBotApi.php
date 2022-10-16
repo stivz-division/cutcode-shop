@@ -2,6 +2,7 @@
 
 namespace App\Services\Telegram;
 
+use App\Exceptions\Telegram\TelegramFailedSendMessageException;
 use Illuminate\Support\Facades\Http;
 
 class TelegramBotApi
@@ -9,11 +10,24 @@ class TelegramBotApi
     public const HOST = 'https://api.telegram.org/bot';
 
 
-    public static function sendMessage(string $token, int $chatId, string $text): void
+    /**
+     * @param string $token
+     * @param int $chatId
+     * @param string $text
+     * @return bool
+     * @throws TelegramFailedSendMessageException
+     */
+    public static function sendMessage(string $token, int $chatId, string $text): bool
     {
-        Http::get(self::HOST . $token . '/sendMessage', [
-            'chat_id' => $chatId,
-            'text' => $text
-        ]);
+        try {
+            $response = Http::get(self::HOST . $token . '/sendMessage', [
+                'chat_id' => $chatId,
+                'text' => $text
+            ]);
+
+            return $response->successful();
+        } catch (\Exception $exception) {
+            throw new TelegramFailedSendMessageException(__('Ошибка отправки сообщения в telegram'));
+        }
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use App\Exceptions\Telegram\TelegramFailedSendMessageException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
@@ -22,7 +23,6 @@ class Handler extends ExceptionHandler
      * @var array<int, class-string<\Throwable>>
      */
     protected $dontReport = [
-        //
     ];
 
     /**
@@ -47,6 +47,12 @@ class Handler extends ExceptionHandler
             if (app()->bound('sentry')) {
                 app('sentry')->captureException($e);
             }
+        });
+
+        $this->reportable(function (TelegramFailedSendMessageException $e) {
+            logger()
+                ->channel('single')
+                ->critical($e->getMessage());
         });
     }
 }
