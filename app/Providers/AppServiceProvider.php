@@ -28,12 +28,26 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Model::shouldBeStrict(!app()->isProduction());
+        Model::shouldBeStrict($this->app->isLocal());
 
-        DB::whenQueryingForLongerThan(4000, function (Connection $connection) {
-            logger()
-                ->channel('telegram')
-                ->debug('whenQueryingForLongerThan: ' . $connection->query()->toSql());
+        if ($this->app->isLocal()) {
+            return;
+        }
+
+        DB::whenQueryingForLongerThan(
+            CarbonInterval::second(5),
+            function (Connection $connection) {
+                logger()
+                    ->channel('telegram')
+                    ->debug('whenQueryingForLongerThan: ' . $connection->totalQueryDuration());
+            });
+
+        DB::listen(function ($query) {
+            if ($query->time > 3000) {
+                logger()
+                    ->channel('telegram')
+                    ->debug('long query:' . $query->sql, $query->bindings);
+            }
         });
 
         $kernel = app(Kernel::class);
