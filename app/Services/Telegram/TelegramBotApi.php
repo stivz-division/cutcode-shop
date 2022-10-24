@@ -23,11 +23,13 @@ class TelegramBotApi
             $response = Http::get(self::HOST . $token . '/sendMessage', [
                 'chat_id' => $chatId,
                 'text' => $text
-            ]);
+            ])->throw()->json();
 
-            return $response->successful();
-        } catch (\Exception $exception) {
-            throw new TelegramFailedSendMessageException(__('Ошибка отправки сообщения в telegram'));
+            return $response['ok'] ?? false;
+        } catch (\Throwable $exception) {
+            report(new TelegramFailedSendMessageException($exception->getMessage()));
+
+            return false;
         }
     }
 }

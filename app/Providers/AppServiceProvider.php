@@ -26,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         Model::shouldBeStrict($this->app->isLocal());
 
@@ -34,24 +34,23 @@ class AppServiceProvider extends ServiceProvider
             return;
         }
 
-        DB::whenQueryingForLongerThan(
-            CarbonInterval::second(5),
-            function (Connection $connection) {
-                logger()
-                    ->channel('telegram')
-                    ->debug('whenQueryingForLongerThan: ' . $connection->totalQueryDuration());
-            });
+//        DB::whenQueryingForLongerThan(
+//            CarbonInterval::second(5),
+//            function (Connection $connection) {
+//                logger()
+//                    ->channel('telegram')
+//                    ->debug('whenQueryingForLongerThan: ' . $connection->totalQueryDuration());
+//            });
 
         DB::listen(function ($query) {
-            if ($query->time > 3000) {
+            if ($query->time > 100) {
                 logger()
                     ->channel('telegram')
-                    ->debug('long query:' . $query->sql, $query->bindings);
+                    ->debug('query longer than 1ms:' . $query->sql, $query->bindings);
             }
         });
 
-        $kernel = app(Kernel::class);
-        $kernel->whenRequestLifecycleIsLongerThan(
+        app(Kernel::class)->whenRequestLifecycleIsLongerThan(
             CarbonInterval::second(4),
             function () {
                 logger()

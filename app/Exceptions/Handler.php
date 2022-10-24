@@ -49,10 +49,10 @@ class Handler extends ExceptionHandler
             }
         });
 
-        $this->reportable(function (TelegramFailedSendMessageException $e) {
-            logger()
-                ->channel('single')
-                ->critical($e->getMessage());
-        });
+//        $this->reportable(function (TelegramFailedSendMessageException $e) {
+//            logger()
+//                ->channel('single')
+//                ->critical($e->getMessage());
+//        });
     }
 }
