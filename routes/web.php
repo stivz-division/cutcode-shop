@@ -14,5 +14,14 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
+    dd(
+        \App\Models\Product::query()
+            ->with(['categories', 'brand'])
+            ->where('id', 1)
+            ->get()
+    );
+
+
+
     return view('welcome');
 });
