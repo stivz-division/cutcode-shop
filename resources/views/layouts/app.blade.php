@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="utf-8">
-    <title>CutCode</title>
+    <title>@yield('title', env('APP_NAME'))</title>
     <meta name="description" content="Видеокурс по изучению принципов программирования">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
