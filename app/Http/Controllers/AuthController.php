@@ -12,6 +12,7 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -42,7 +43,7 @@ class AuthController extends Controller
         $user = User::query()->create([
             'name' => $request->get('name'),
             'email' => $request->get('email'),
-            'password' => bcrypt($request->get('password')),
+            'password' => Hash::make($request->get('password')),
         ]);
 
         event(new Registered($user));
@@ -97,7 +98,7 @@ class AuthController extends Controller
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function ($user, $password) {
                 $user->forceFill([
-                    'password' => bcrypt($password)
+                    'password' => Hash::make($password)
                 ])->setRememberToken(str()->random(60));
 
                 $user->save();
@@ -126,7 +127,7 @@ class AuthController extends Controller
         ], [
             'name' => $githubUser->name ?? 'New User',
             'email' => $githubUser->email,
-            'password' => bcrypt(str()->random(20))
+            'password' => Hash::make(str()->random(20))
         ]);
 
         auth()->login($user);
