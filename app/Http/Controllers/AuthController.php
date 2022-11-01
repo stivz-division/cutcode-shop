@@ -81,10 +81,13 @@ class AuthController extends Controller
             $request->only('email')
         );
 
-        // TODO 3rd lesson flash notification
-        return $status === Password::RESET_LINK_SENT
-            ? back()->with(['message' => __($status)])
-            : back()->withErrors(['email' => __($status)]);
+        if ($status === Password::RESET_LINK_SENT) {
+            flash()->info(__($status));
+            return back();
+        }
+
+        return back()->withErrors(['email' => __($status)]);
+
     }
 
     public function reset($token)
@@ -107,9 +110,12 @@ class AuthController extends Controller
             }
         );
 
-        return $status === Password::PASSWORD_RESET
-            ? redirect()->route('login')->with('message', __($status))
-            : back()->withErrors(['email' => [__($status)]]);
+        if ($status === Password::PASSWORD_RESET) {
+            flash()->info(__($status));
+            return redirect()->route('login');
+        }
+
+        return back()->withErrors(['email' => __($status)]);
     }
 
     public function github()
@@ -121,7 +127,6 @@ class AuthController extends Controller
     {
         $githubUser = Socialite::driver('github')->user();
 
-        // TODO 3rd lesson to custom table
         $user = User::query()->updateOrCreate([
             'github_id' => $githubUser->id,
         ], [

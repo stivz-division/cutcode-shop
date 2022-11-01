@@ -17,6 +17,7 @@
 
 </head>
 <body>
-Hello world!!
+<x-flash></x-flash>
+@yield('content')
 </body>
 </html>

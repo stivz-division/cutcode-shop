@@ -9,33 +9,78 @@ trait HasSlug
     protected static function bootHasSlug()
     {
         static::creating(function (Model $model) {
-            $model->slug = $model->slug ??
-                self::setSlug($model);
+            $model->makeSlug();
+//            $model->slug = $model->slug ??
+//                self::setSlug($model);
         });
     }
 
-    public static function setSlug(Model $model): \Stringable
+    protected function makeSlug(): void
     {
-        $slug = str($model->{self::slugFrom()})
-            ->slug();
+        if (isset($this->{$this->slugColumn()})) {
+            return;
+        }
 
-        return $slug
-            ->append(self::appendSlug($model, $slug));
+        $slug = $this->slugUnique(
+            str($this->{$this->slugFrom()})
+                ->slug()
+                ->value()
+        );
+
+        $this->{$this->slugColumn()} = $slug;
     }
 
-    public static function appendSlug(Model $model, string $slug): string
-    {
-        $countCreatedSlugs = $model
-            ->newQuery()
-            ->where('slug', 'like', $slug . '%')
-            ->count();
+//    public static function setSlug(Model $model): \Stringable
+//    {
+//        $slug = str($model->{self::slugFrom()})
+//            ->slug();
+//
+//        return $slug
+//            ->append(self::appendSlug($model, $slug));
+//    }
 
-        return  $countCreatedSlugs > 0 ?
-            '-' . $countCreatedSlugs + 1 :
-            '';
+//    public static function appendSlug(Model $model, string $slug): string
+//    {
+//        $countCreatedSlugs = $model
+//            ->newQuery()
+//            ->where('slug', 'like', $slug . '%')
+//            ->count();
+//
+//        return $countCreatedSlugs > 0 ?
+//            '-' . $countCreatedSlugs + 1 :
+//            '';
+//    }
+
+    private function slugUnique(string $slug): string
+    {
+        $originalSlug = $slug;
+        $i = 0;
+
+        while ($this->isSlugExists($slug)) {
+            $i++;
+
+            $slug = $originalSlug . '-' . $i;
+        }
+
+        return $slug;
     }
 
-    public static function slugFrom(): string
+    private function isSlugExists(string $slug): bool
+    {
+        $query = $this->newQuery()
+            ->where(self::slugColumn(), $slug)
+            ->where($this->getKeyName(), '!=', $this->getKey())
+            ->withoutGlobalScopes();
+
+        return $query->exists();
+    }
+
+    protected function slugColumn(): string
+    {
+        return 'slug';
+    }
+
+    protected function slugFrom(): string
     {
         return 'title';
     }
