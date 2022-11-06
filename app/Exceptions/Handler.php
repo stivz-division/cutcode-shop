@@ -49,6 +49,12 @@ class Handler extends ExceptionHandler
             }
         });
 
+        $this->renderable(function (\DomainException $e) {
+           flash()->alert($e->getMessage());
+
+           return redirect()->route('login');
+        });
+
 //        $this->reportable(function (TelegramFailedSendMessageException $e) {
 //            logger()
 //                ->channel('single')
