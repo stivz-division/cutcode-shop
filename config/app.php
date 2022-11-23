@@ -201,6 +201,7 @@ return [
         ViewServiceProvider::class,
         TestingServiceProvider::class,
         DomainServiceProvider::class,
+        \App\Providers\CatalogServiceProvider::class
 
     ],
 
