@@ -41,7 +41,7 @@ return new class extends Migration {
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
 
-            $table->foreignIdFor(\App\Models\Product::class)
+            $table->foreignIdFor(\Domain\Product\Models\Product::class)
                 ->constrained()
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();

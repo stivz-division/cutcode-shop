@@ -2,11 +2,11 @@
 
 namespace Database\Factories;
 
-use App\Models\Property;
+use Domain\Product\Models\Property;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Property>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\Domain\Product\Models\Property>
  */
 class PropertyFactory extends Factory
 {

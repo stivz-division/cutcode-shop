@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Option;
+use Domain\Product\Models\Option;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -25,12 +25,12 @@ return new class extends Migration
         Schema::create('option_value_product', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignIdFor(\App\Models\Product::class)
+            $table->foreignIdFor(\Domain\Product\Models\Product::class)
                 ->constrained()
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
 
-            $table->foreignIdFor(\App\Models\OptionValue::class)
+            $table->foreignIdFor(\Domain\Product\Models\OptionValue::class)
                 ->constrained()
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();

@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace Tests\Feature\App\Http\Controllers\Auth;
 
+
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 

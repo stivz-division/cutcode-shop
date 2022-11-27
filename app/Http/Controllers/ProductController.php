@@ -2,14 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
-use Domain\Catalog\Models\Brand;
-use Domain\Catalog\Models\Category;
+use Domain\Product\Models\Product;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
@@ -17,15 +13,9 @@ class ProductController extends Controller
     {
         $product->load('optionValues.option');
 
-        $options = $product->optionValues->mapToGroups(function ($item) {
-            return [$item->option->title => $item];
-        });
-
-        session()->put('also.' . $product->id, $product->id);
-
-        return view('product.show', compact(
-            'product',
-            'options'
-        ));
+        return view('product.show', [
+            'product' => $product,
+            'options' => $product->optionValues->keyValues()
+        ]);
     }
 }
