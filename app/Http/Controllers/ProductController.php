@@ -21,6 +21,8 @@ class ProductController extends Controller
             return [$item->option->title => $item];
         });
 
+        session()->put('also.' . $product->id, $product->id);
+
         return view('product.show', compact(
             'product',
             'options'
