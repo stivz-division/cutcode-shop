@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SignInFormRequest;
 use Illuminate\Http\RedirectResponse;
+use Support\SessionRegenerator;
 
 class SignInController extends Controller
 {
@@ -21,7 +22,7 @@ class SignInController extends Controller
             ])->onlyInput('email');
         }
 
-        $request->session()->regenerate();
+        SessionRegenerator::run();
 
         return redirect()->intended(
             route('home')
@@ -30,10 +31,7 @@ class SignInController extends Controller
 
     public function logout(): RedirectResponse
     {
-        auth()->logout();
-
-        request()->session()->invalidate();
-        request()->session()->regenerateToken();
+        SessionRegenerator::run(fn() => auth()->logout());
 
         return redirect()->route('home');
     }

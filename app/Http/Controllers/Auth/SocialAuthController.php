@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Domain\Auth\Models\User;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Socialite\Facades\Socialite;
+use Support\SessionRegenerator;
 
 class SocialAuthController extends Controller
 {
@@ -36,7 +38,7 @@ class SocialAuthController extends Controller
             'password' => Hash::make(str()->random(20))
         ]);
 
-        auth()->login($user);
+        SessionRegenerator::run(fn() => Auth::login($user));
 
         return redirect()
             ->intended(route('home'));
