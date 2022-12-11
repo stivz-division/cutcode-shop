@@ -1,5 +1,6 @@
 <?php
 
+use Domain\Catalog\Models\Brand;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -24,11 +25,14 @@ return new class extends Migration {
             $table->unsignedInteger('price')
                 ->default(0);
 
-            $table->foreignIdFor(\Domain\Catalog\Models\Brand::class)
+            $table->foreignIdFor(Brand::class)
                 ->nullable()
                 ->constrained()
                 ->cascadeOnUpdate()
                 ->nullOnDelete();
+
+            $table->unsignedInteger('quantity')
+                ->default(0);
 
             $table->timestamps();
         });

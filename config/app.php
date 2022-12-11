@@ -1,6 +1,8 @@
 <?php
 
+use App\Providers\CatalogServiceProvider;
 use App\Providers\DomainServiceProvider;
+use App\Providers\MoonShineServiceProvider;
 use App\Providers\TestingServiceProvider;
 use App\Providers\ViewServiceProvider;
 use Illuminate\Support\Facades\Facade;
@@ -201,7 +203,8 @@ return [
         ViewServiceProvider::class,
         TestingServiceProvider::class,
         DomainServiceProvider::class,
-        \App\Providers\CatalogServiceProvider::class
+        CatalogServiceProvider::class,
+        MoonShineServiceProvider::class
 
     ],
 
